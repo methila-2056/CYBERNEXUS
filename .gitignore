@@ -1,0 +1,96 @@
+# ============================================================
+# CYBERNEXUS - .gitignore
+# Keep secrets, local state, and machine-specific files out of git.
+# ============================================================
+
+# --- Environment & secrets (NEVER commit real values) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+ENV.bak/
+
+# Unit test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.pytype/
+
+# --- Node / frontend ---
+node_modules/
+.pnpm-store/
+.npm/
+.vite/
+dist/
+dist-ssr/
+*.local
+*.tsbuildinfo
+
+# --- IDEs / editors ---
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# --- Databases ---
+*.sqlite3
+*.db
+*.sqlite
+postgres_data/
+
+# --- ML artifacts / models (results, not source) ---
+models/*.joblib
+models/*.pkl
+ml-engine/artifacts/
+datasets/generated/
+
+# --- Logs / runtime ---
+logs/
+*.log
+nohup.out
+
+# --- OS ---
+.vscode-static-analysis.db

@@ -1,0 +1,63 @@
+name: cybernexus
+
+# CYBERNEXUS orchestration:
+#   docker compose up -d postgres   -> database only (recommended dev workflow)
+#   docker compose up --build        -> full stack demo (db + api + web)
+#   docker compose down -v           -> stop and reset volumes (lab data wiped)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cybernexus-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cybernexus}
+      POSTGRES_USER: ${POSTGRES_USER:-cybernexus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cybernexus}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - cybernexus_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cybernexus} -d ${POSTGRES_DB:-cybernexus}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - cybernexus-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    container_name: cybernexus-backend
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-cybernexus}:${POSTGRES_PASSWORD:-cybernexus}@postgres:5432/${POSTGRES_DB:-cybernexus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cybernexus}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - cybernexus-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: cybernexus-frontend
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      - backend
+    networks:
+      - cybernexus-net
+
+volumes:
+  cybernexus_pgdata:
+
+networks:
+  cybernexus-net:
+    name: cybernexus-lab
