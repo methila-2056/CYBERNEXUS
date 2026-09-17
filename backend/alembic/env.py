@@ -6,14 +6,13 @@ environment (.env) rather than being hard-coded in alembic.ini.
 
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import engine_from_config, pool
-
-from app.core.config import get_settings
-from app.core.database import Base
 
 # Import models so their metadata is available to autogenerate.
 import app.models  # noqa: F401
+from alembic import context
+from app.core.config import get_settings
+from app.core.database import Base
 
 config = context.config
 
